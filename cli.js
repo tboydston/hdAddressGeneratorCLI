@@ -52,18 +52,26 @@ const validOptions = {
 
 const args = process.argv
 
-generateKeys(args)
+;(async()=>{
 
-async function generateKeys(args){
+let options = await processInput(args)
+let hdAdd = await processCommand(options)
+let results = await generateKeys(options.total,options.startIndex,options.hidePrivateKeys,hdAdd)
+
+processOutput(results,options)
+
+
+})();
+
+async function processInput(args){
 
     let options = {}
     let command = ""
-    let results = {}
 
     try{
 
         options = processOptions(args,defaultOptions)
-        command = args[2]
+        options.command = args[2]
 
         validateOptions(options,validOptions)
 
@@ -74,50 +82,60 @@ async function generateKeys(args){
     }
 
 
-    console.log( options )
 
+    return options 
+
+}
+
+async function processCommand(options){
 
     let hdAdd = {}
 
     try{
-        if ( command == "help" ) printHelp(args)
-        if ( command == "withSeed") hdAdd = HdAddGen.withSeed(options.seed,options.coin,options.hardened,options.bip,options.account,options.change,options.bip38Password)
-        if ( command == "withMnemonic") hdAdd = HdAddGen.withMnemonic(options.mnemonic,options.passPhrase,options.coin,options.hardened,options.bip,options.account,options.change,options.bip38Password)
-        if ( command == "withSeedBIP32") hdAdd = HdAddGen.withSeedBIP32(options.seed,options.coin,options.customPath,options.hardened,options.bip38Password)
-        if ( command == "withMnemonicBIP32") hdAdd = HdAddGen.withMnemonicBIP32(options.mnemonic,options.passPhrase,options.coin,options.customPath,options.hardened,options.bip38Password)
-        if ( command == "withSeedBIP141") hdAdd = HdAddGen.withSeedBIP141(options.seed,options.coin,options.customPath,options.hashAlgo,options.hardened,options.bip38Password)
-        if ( command == "withMnemonicBIP141") hdAdd = HdAddGen.withMnemonicBIP141(options.mnemonic,options.passPhrase,options.coin,options.customPath,options.hashAlgo,options.hardened,options.bip38Password)
+        if ( options.command == "help" ) printHelp(args)
+        if ( options.command == "withSeed") hdAdd = HdAddGen.withSeed(options.seed,options.coin,options.hardened,options.bip,options.account,options.change,options.bip38Password)
+        if ( options.command == "withMnemonic") hdAdd = HdAddGen.withMnemonic(options.mnemonic,options.passPhrase,options.coin,options.hardened,options.bip,options.account,options.change,options.bip38Password)
+        if ( options.command == "withSeedBIP32") hdAdd = HdAddGen.withSeedBIP32(options.seed,options.coin,options.customPath,options.hardened,options.bip38Password)
+        if ( options.command == "withMnemonicBIP32") hdAdd = HdAddGen.withMnemonicBIP32(options.mnemonic,options.passPhrase,options.coin,options.customPath,options.hardened,options.bip38Password)
+        if ( options.command == "withSeedBIP141") hdAdd = HdAddGen.withSeedBIP141(options.seed,options.coin,options.customPath,options.hashAlgo,options.hardened,options.bip38Password)
+        if ( options.command == "withMnemonicBIP141") hdAdd = HdAddGen.withMnemonicBIP141(options.mnemonic,options.passPhrase,options.coin,options.customPath,options.hashAlgo,options.hardened,options.bip38Password)
     } catch (e){
         console.log(e)
         process.exit()
     }
 
+    return hdAdd
+
+}
+
+async function generateKeys(total,startIndex,hidePrivateKeys,hdAdd){
+
+    let results = {}
     results.rootKeys = {}
     results.rootKeys.hashAlgo = hdAdd.hashAlgo
     results.rootKeys.bip32Path = hdAdd.bip32Path
     results.rootKeys.bip32Seed = hdAdd.bip32Seed
     results.rootKeys.bip32RootKey = hdAdd.bip32RootKey
-    results.rootKeys.accountXprivKey = ( !options.hidePrivateKeys ) ? hdAdd.accountXprivKey : "REDACTED"
+    results.rootKeys.accountXprivKey = ( !hidePrivateKeys ) ? hdAdd.accountXprivKey : "REDACTED"
     results.rootKeys.accountXpubKey = hdAdd.accountXpubKey
-    results.rootKeys.bip32XprivKey = ( !options.hidePrivateKeys ) ? hdAdd.bip32XprivKey : "REDACTED"
+    results.rootKeys.bip32XprivKey = ( !hidePrivateKeys ) ? hdAdd.bip32XprivKey : "REDACTED"
     results.rootKeys.bip32XpubKey = hdAdd.bip32XpubKey
     
     results.addresses = []
     
-    let fullAddresses = await hdAdd.generate(options.total,options.startIndex)
+    let fullAddresses = await hdAdd.generate(total,startIndex)
     
     fullAddresses.forEach(address => {
         results.addresses.push({
             path:address.path,
             address:address.address,
             pubKey:address.pubKey,
-            privKey:( ( !options.hidePrivateKeys ) ? address.privKey : "REDACTED"),
+            privKey:( ( !hidePrivateKeys ) ? address.privKey : "REDACTED"),
 
         })
     })
 
-    processOutput(results,options)
-
+    return results
 }
 
 function processOutput(results,options){
@@ -224,8 +242,6 @@ function loadFile(options){
         throw `File expected to be in JSON format. See ReadMe for file format details. `
     }
 
-console.log( fileContents )
-
     if ( fileContents.mnemonic != undefined ){
         options.mnemonic = fileContents.mnemonic
     }
@@ -235,6 +251,7 @@ console.log( fileContents )
     }
 
     return options 
+
 }
 
 
@@ -319,8 +336,6 @@ function printHelp(args){
         console.log("Supported Options: mnemonic, coin, customPath, hardened, hashAlgo, bip38Password)")
         printDefaultOptions()
     }
-    
-
 
     process.exit()
 
