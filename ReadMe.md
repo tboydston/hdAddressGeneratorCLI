@@ -14,12 +14,10 @@ Ideal for cold wallet, air gapped address generation.
 
 # Installation  
 
-`
+```
 git clone https://github.com/tboydston/hdAddressGeneratorCLI
-`
-`
 npm install
-`
+```
 
 # Usage 
 
