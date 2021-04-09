@@ -1,11 +1,15 @@
+/**
+ * TODO 
+ * Options is passed to functions and called internally. Streamline this a bit. 
+ */
+
 const fs = require('fs')
 const HdAddGen = require('hdAddressGenerator')
 const colors = require('colors')
 
-
 class AddressGeneratorCli {
 
-    validRequests = ["help","withSeed","withMnemonic","withMnemonicBIP32","withSeedBIP32","withMnemonicBIP141","withSeedBIP141","help"]
+    validRequests = ["help","supportedCoins","withSeed","withMnemonic","withMnemonicBIP32","withSeedBIP32","withMnemonicBIP141","withSeedBIP141"]
     shortOptionEquivalents = {
         "m":"mnemonic",
         "h":"hardened",
@@ -58,19 +62,20 @@ class AddressGeneratorCli {
     args = {}
 
     constructor(args){
-        this.options = {}
         this.args = args 
     }
 
+    /**
+     * Generate deterministic addresses based on process.argv data.
+     * @returns obj
+     */
     async generate(){
-
-        let results = {}
 
         try{
 
             this.options = await this.processInput(this.args)
             this.hdAdd = await this.processCommand(this.options)
-            this.results = await this.generateKeys(this.options.total,this.options.startIndex,this.options.hidePrivateKeys)
+            this.results = await this.generateKeys()
 
         } catch (e) {
             throw e
@@ -80,6 +85,12 @@ class AddressGeneratorCli {
     
     }
     
+    /**
+     * Takes raw process.argv input, validates it, adds in missing defaults and 
+     * sanitizes it for address generation.
+     * @param {array} args Raw process.argv input.
+     * @returns obj
+     */
     async processInput(args){
 
         let submittedOptions = {}
@@ -92,7 +103,6 @@ class AddressGeneratorCli {
             await this.validateOptions(submittedOptions)
     
         } catch (e){
-            this.printHelp(args)
             throw(e)
         }
 
@@ -100,12 +110,16 @@ class AddressGeneratorCli {
     
     }
     
+    /**
+     * Based on submitted object, returns HdAddressGenerator object.
+     * @param {obj} options 
+     * @returns obj
+     */
     async processCommand(options){
 
         let hdAdd = {}
     
         try{
-            if ( options.command == "help" ) printHelp(args)
             if ( options.command == "withSeed") hdAdd = HdAddGen.withSeed(options.seed,options.coin,options.hardened,options.bip,options.account,options.change,options.bip38Password)
             if ( options.command == "withMnemonic") hdAdd = HdAddGen.withMnemonic(options.mnemonic,options.passPhrase,options.coin,options.hardened,options.bip,options.account,options.change,options.bip38Password) 
             if ( options.command == "withSeedBIP32") hdAdd = HdAddGen.withSeedBIP32(options.seed,options.coin,options.customPath,options.hardened,options.bip38Password)
@@ -120,7 +134,11 @@ class AddressGeneratorCli {
     
     }
     
-    async generateKeys(total,startIndex,hidePrivateKey){
+    /**
+     * Prepare and format rootKeys and addresses. 
+     * @returns obj
+     */
+    async generateKeys(){
         
         let results = {}
         results.rootKeys = {}
@@ -135,7 +153,7 @@ class AddressGeneratorCli {
         
         results.addresses = []
         
-        let fullAddresses = await this.hdAdd.generate(total,startIndex)
+        let fullAddresses = await this.hdAdd.generate(this.options.total,this.options.startIndex)
         
         fullAddresses.forEach(address => {
             results.addresses.push({
@@ -151,6 +169,9 @@ class AddressGeneratorCli {
 
     }
     
+    /**
+     * Formats and logs to console address generation data. 
+     */
     async processOutput(){
 
         let format = this.options.format
@@ -180,6 +201,12 @@ class AddressGeneratorCli {
     
     }
     
+    /**
+     * Converts, sanitizes, validates, and prepares user submitted options.
+     * @param {array} args process.argv array.
+     * @param {obj} options 
+     * @returns 
+     */
     async processOptions(args,options){
 
         let command = args[2]
@@ -224,7 +251,7 @@ class AddressGeneratorCli {
         }
     
         // If a key file is specified load the key file. 
-        options = ( options.file != false ) ? loadFile(options) : options
+        options = ( options.file != false ) ? await this.loadFile(options) : options
     
         this.requireOptions[command].forEach( requiredOption => {
             if ( options[requiredOption] == undefined ){
@@ -237,7 +264,10 @@ class AddressGeneratorCli {
     
     } 
     
-    
+    /**
+     * Validates options against constants.
+     * @param {obj} options 
+     */
     async validateOptions( options ){
 
         if ( !this.validOptions.bip.includes(parseInt(options.bip)) ){
@@ -251,6 +281,11 @@ class AddressGeneratorCli {
     
     }
     
+    /**
+     * Loads external key or mnemonic file.
+     * @param {obj} options 
+     * @returns 
+     */
     async loadFile(options){
     
         let fileContents = {}
@@ -270,113 +305,6 @@ class AddressGeneratorCli {
         }
     
         return options 
-    
-    }
-
-    
-    async printHelp(args){
-    
-        let command = ""
-    
-        if( args[3] == undefined ){
-            console.log()
-            console.log("HELP")
-            console.log()
-            console.log("   usage: node cli.js [command] --option=key -o=key")
-            console.log("   example: node cli.js withMnemonic --coin=BTC -m='brand improve symbol strike say focus ginger imitate ginger appear wheel brand swear relief zero'")
-            console.log()
-            console.log("COMMANDS")
-            console.log()
-            console.log("   help   Print this help menu.")
-            console.log("   help [command]  Print help for specific command.")
-            // console.log("coinList  Print list of all supported coins.")
-            console.log("   withSeed   Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using seed.")
-            console.log("   withMnemonic   Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using mnemonic and optional pass phrase.")
-            console.log("   withSeedBIP32   Generate BIP 32 legacy addresses with custom path and seed.")
-            console.log("   withMnemonicBIP32   Generate BIP 32 legacy addresses with custom path, mnemonic, and optional pass phrase.")
-            console.log("   withSeedBIP141   Generate BIP 141 addresses with custom path, seed, and hashing algo.")
-            console.log("   withMnemonicBIP141   Generate BIP 141 addresses with custom path, mnemonic, and hashing algo.")
-            console.log()
-            console.log("OPTIONS")
-            console.log() 
-            console.log("   --mnemonic -m  BIP39 mnemonic with spaces between words.")  
-            console.log("   --seed BIP39 seed used instead of a mnemonic.")  
-            console.log("   --hardened -h Should the resulting addresses be hardened?") 
-            console.log("   --passPhrase -phrase Additional BIP39 passphrase custom passphrase to further secure mnemonic.") 
-            console.log("   --coin Coin short name ( BTC, ETH, XRP, ect.).") 
-            console.log("   --bip What BIP style addresses are you trying to create. Default: 44 Options: 32,44,49,84,141") 
-            console.log("   --account -acc Account used in HD address path.") 
-            console.log("   --change -ch Used in HD address path to signify if address is for change.") 
-            console.log("   --bip38Password -pass Additional password used to encrypt private keys.") 
-            console.log("   --customPath -path Custom path overwriting the path generated using bip/account/change.")
-            console.log("   --hashAlgo -algo Algorithm used to hash the address. Coin must have supporting network information. Options: p2pkh,p2wpkhInP2sh,p2wpkh") 
-            console.log("   --startIndex -s Which address index to start generating addresses from.") 
-            console.log("   --total -t Total number of addresses to generate.") 
-            console.log("   --format What format would you like the results returned in. Options: json(default), csv, or table") 
-            console.log("   --hideRootKeys Do not show the root keys used to generate the addresses.") 
-            console.log("   --hidePrivateKeys Hide all private keys.") 
-            console.log("   --file Load mnemonic or seed from file.") 
-            console.log()
-    
-        } else { 
-            command = this.args[3] 
-        }
-    
-        if ( command == "withSeed" ){
-            console.log("withSeed   Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using seed.")
-            console.log("Required Options: seed")
-            console.log("Supported Options: seed, coin, hardened, bip, account, change, bip38Password")
-            this.printDefaultOptions()
-        }
-    
-        if ( command == "withMnemonic" ){
-            console.log("withMnemonic   Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using mnemonic and optional pass phrase.")
-            console.log("Required Options: mnemonic")
-            console.log("Supported Options: mnemonic, passPhrase, coin, hardened, bip, account, change, bip38Password")
-            this.printDefaultOptions()
-        }
-        
-        if ( command == "withSeedBIP32" ){
-            console.log("withSeedBIP32   Generate BIP 32 legacy addresses with custom path and seed.")
-            console.log("Required Options: seed, customPath")
-            console.log("Supported Options: seed, coin, customPath, hardened, bip38Password)")
-            this.printDefaultOptions()
-        }
-    
-        if ( command == "withMnemonicBIP32" ){
-            console.log("withMnemonicBIP32   Generate BIP 32 legacy addresses with custom path, mnemonic, and optional pass phrase.")
-            console.log("Required Options: mnemonic, customPath")
-            console.log("Supported Options: mnemonic, passPhrase, coin, customPath, hardened, bip38Password)")
-            this.printDefaultOptions()
-        }
-    
-        if ( command == "withSeedBIP141" ){
-            console.log("withSeedBIP141   Generate BIP 141 addresses with custom path, seed, and hashing algo.")
-            console.log("Required Options: seed, customPath, hashAlgo")
-            console.log("Supported Options: seed, coin, customPath, hardened, hashAlgo, bip38Password)")
-            this.printDefaultOptions()
-        }
-    
-        if ( command == "withMnemonicBIP141" ){
-            console.log("withMnemonicBIP141   Generate BIP 141 addresses with custom path, mnemonic, and hashing algo.")
-            console.log("Required Options: mnemonic, customPath, hashAlgo")
-            console.log("Supported Options: mnemonic, coin, customPath, hardened, hashAlgo, bip38Password)")
-            this.printDefaultOptions()
-        }
-    
-    }
-    
-    async printDefaultOptions(){
-    
-        let responseString = "Defaults: "
-    
-        for (const key in this.defaultOptions) {
-            responseString += key+"="+this.defaultOptions[key]+", "
-        }
-    
-        responseString.slice(responseString.length-2,responseString.length)
-    
-        console.log(responseString)
     
     }
 
