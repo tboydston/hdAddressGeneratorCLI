@@ -33,6 +33,7 @@ node cli.js withMnemonic --coin=BTC -m='brand improve symbol strike say focus gi
 
 ## Commands
 
+``
    help   Print this help menu.
    help [command]  Print help for specific command.
    supportedCoins  Print list of all supported coins.
@@ -42,9 +43,11 @@ node cli.js withMnemonic --coin=BTC -m='brand improve symbol strike say focus gi
    withMnemonicBIP32   Generate BIP 32 legacy addresses with custom path, mnemonic, and optional pass phrase.
    withSeedBIP141   Generate BIP 141 addresses with custom path, seed, and hashing algo.
    withMnemonicBIP141   Generate BIP 141 addresses with custom path, mnemonic, and hashing algo.
+``
 
 ## Options
 
+``
    --mnemonic -m  BIP39 mnemonic with spaces between words.
    --seed BIP39 seed used instead of a mnemonic.
    --hardened -h Should the resulting addresses be hardened?
@@ -63,13 +66,16 @@ node cli.js withMnemonic --coin=BTC -m='brand improve symbol strike say focus gi
    --hidePrivateKeys Hide all private keys.
    --file Load mnemonic or seed from file.
    --convertAddress -ca Convert legacy addresses into different formats. Options: cashAddress,bitpayAddress,bchSlp
+``
 
 ## Command Specific 
 
 ### withSeed
 
 Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using seed.
+
 **Required Options:** seed
+
 **Supported Options:** seed, coin, hardened, bip, account, change, bip38Password
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false
@@ -77,7 +83,9 @@ Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using seed.
 ### withMnemonic
 
 Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using mnemonic and optional pass phrase.
+
 **Required Options:** mnemonic
+
 **Supported Options:** mnemonic, passPhrase, coin, hardened, bip, account, change, bip38Password
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false
@@ -85,7 +93,9 @@ Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using mnemo
 ### withSeedBIP32
 
 Generate BIP 32 legacy addresses with custom path and seed.
+
 **Required Options:** seed, customPath
+
 **Supported Options:** seed, coin, customPath, hardened, bip38Password)
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false
@@ -95,6 +105,7 @@ Generate BIP 32 legacy addresses with custom path and seed.
 
 Generate BIP 32 legacy addresses with custom path, mnemonic, and optional pass phrase.
 **Required Options:** mnemonic, customPath
+
 **Supported Options:** mnemonic, passPhrase, coin, customPath, hardened, bip38Password)
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false
@@ -103,7 +114,9 @@ Generate BIP 32 legacy addresses with custom path, mnemonic, and optional pass p
 ### withSeedBIP141   
 
 Generate BIP 141 addresses with custom path, seed, and hashing algo.
+
 **Required Options:** seed, customPath, hashAlgo
+
 **Supported Options:** seed, coin, customPath, hardened, hashAlgo, bip38Password)
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false
@@ -111,7 +124,9 @@ Generate BIP 141 addresses with custom path, seed, and hashing algo.
 ### withMnemonicBIP141   
 
 Generate BIP 141 addresses with custom path, mnemonic, and hashing algo.
+
 **Required Options:** mnemonic, customPath, hashAlgo
+
 **Supported Options:** mnemonic, coin, customPath, hardened, hashAlgo, bip38Password)
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false, 
