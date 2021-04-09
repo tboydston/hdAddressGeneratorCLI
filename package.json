@@ -9,6 +9,8 @@
   "author": "Tracey Boydston",
   "license": "MIT",
   "dependencies": {
-    "hdaddressgenerator": "^1.0.2"
+    "colors": "^1.4.0",
+    "hdaddressgenerator": "^1.0.2",
+    "mocha": "^8.2.1"
   }
 }
