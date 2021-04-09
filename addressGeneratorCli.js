@@ -1,6 +1,6 @@
 /**
  * TODO 
- * Options is passed to functions and called internally. Streamline this a bit. 
+ * 'options' is passed to functions AND called internally. Streamline this a bit. 
  */
 
 const fs = require('fs')
@@ -20,7 +20,8 @@ class AddressGeneratorCli {
         "path":"customPath",
         "algo":"hashAlgo",
         "s":"startIndex",
-        "t":"total"
+        "t":"total",
+        "ca":"convertAddress"
     }
 
     requireOptions = {
@@ -48,12 +49,14 @@ class AddressGeneratorCli {
         format:"json",
         hideRootKeys:false,
         hidePrivateKeys:false,
-        file:false
+        file:false,
+        convertAddress:false
     }
 
     validOptions = {
         bip:[32,44,49,84,142],
-        format:["json","table","csv"]
+        format:["json","table","csv"],
+        addressConversion:["cashAddress","bitpayAddress","bchSlp"]
     }
 
     options = {}
@@ -152,18 +155,23 @@ class AddressGeneratorCli {
         results.rootKeys.bip32XpubKey = this.hdAdd.bip32XpubKey
         
         results.addresses = []
-        
-        let fullAddresses = await this.hdAdd.generate(this.options.total,this.options.startIndex)
-        
-        fullAddresses.forEach(address => {
-            results.addresses.push({
-                path:address.path,
-                address:address.address,
-                pubKey:address.pubKey,
-                privKey:( ( !this.options.hidePrivateKeys ) ? address.privKey : "REDACTED"),
-    
+
+        try {
+
+            let fullAddresses = await this.hdAdd.generate(this.options.total,this.options.startIndex)
+            
+            fullAddresses.forEach(address => {
+                results.addresses.push({
+                    path:address.path,
+                    address: ( this.options.convertAddress != false ) ? this.hdAdd.convertAddress(address.address,this.options.convertAddress) : address.address,
+                    pubKey:address.pubKey,
+                    privKey:( ( !this.options.hidePrivateKeys ) ? address.privKey : "REDACTED")
+                })
             })
-        })
+
+        } catch (e){
+            throw(e)
+        } 
     
         return results
 
@@ -277,6 +285,10 @@ class AddressGeneratorCli {
     
         if ( !this.validOptions.format.includes(options.format) ){
             throw `Format value: ${options.format} is not supported. Supported Formats: ${this.validOptions.format.join(", ")}`
+        }
+
+        if ( options.convertAddress != false && !this.validOptions.addressConversion.includes(options.convertAddress) ){
+            throw `Convert address value: ${options.convertAddress} is not supported. Supported Formats: ${this.validOptions.addressConversion.join(", ")}`
         }
     
     }
