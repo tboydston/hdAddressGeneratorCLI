@@ -135,3 +135,8 @@ Generate BIP 141 addresses with custom path, mnemonic, and hashing algo.
 
 Tests included with this CLI act as integration tests to insure the CLI is operating correctly. Individual coin tests are done in the [hdAddressGenerator](https://github.com/tboydston/hdAddressGenerator/) library this CLI is based on. Before using this library please insure that your coin has a test in this library. If it does not it is easy to add one. Simple follow the test instructions in the readme for [hdAddressGenerator](https://github.com/tboydston/hdAddressGenerator/) and submit a pull request. Tests run for this CLI will pull coin test data from this library automatically.
 
+## Running Tests
+
+`
+npm test
+`
