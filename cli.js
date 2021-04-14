@@ -19,8 +19,7 @@ const coinNetworkList = require('coinnetworklist')
     try{
         results = await addGenCli.generate()
     } catch(e){
-        console.log(e .red)
-        printHelp(process.argv,addGenCli.defaultOptions)
+        console.log(e)
         process.exit()
     }
     
@@ -75,6 +74,7 @@ async function printHelp(args,defaultOptions){
         console.log("   --hideRootKeys Do not show the root keys used to generate the addresses.") 
         console.log("   --hidePrivateKeys Hide all private keys.") 
         console.log("   --file Load mnemonic or seed from file.") 
+        console.log("   --convertAddress -ca For certain coins ( currently only BCH ). You may need to convert legacy addresses into different formats. Options: cashAddress,bitpayAddress,bchSlp") 
         console.log()
 
     } else { 

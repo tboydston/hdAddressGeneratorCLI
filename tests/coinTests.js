@@ -34,8 +34,6 @@ for (const coin in coinData) {
     
     describe(`${ref.longName} (${ref.shortName})`, async () => {
 
-        
-
         let bip44 = false
         let bip44WithPassPhrase = false
         let bip44Hardened = false

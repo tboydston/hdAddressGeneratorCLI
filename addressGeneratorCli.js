@@ -278,6 +278,8 @@ class AddressGeneratorCli {
      */
     async validateOptions( options ){
 
+        
+
         if ( !this.validOptions.bip.includes(parseInt(options.bip)) ){
             throw `BIP value: ${options.bip} is not supported. Supported BIP: ${this.validOptions.bip.join(", ")}`
     
