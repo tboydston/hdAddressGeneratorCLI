@@ -185,7 +185,7 @@ class AddressGeneratorCli {
         let format = this.options.format
     
         if ( format == "json" ){
-            console.log(this.results)
+            console.log(JSON.stringify(this.results,null,4))
         }
     
         if ( format == "table" ){
