@@ -4,7 +4,7 @@
  */
 
 const fs = require('fs')
-const HdAddGen = require('hdAddressGenerator')
+const HdAddGen = require('hdaddressgenerator')
 const colors = require('colors')
 
 class AddressGeneratorCli {
