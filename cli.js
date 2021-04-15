@@ -6,8 +6,8 @@ const coinNetworkList = require('coinnetworklist')
     let results = {}
     let addGenCli = new AddressGeneratorCli(process.argv)
 
-    if ( process.argv[2] == undefined || process.argv[2] == 'printHelp' ){
-        printHelp(process.argv,addGenCli.defaultOptions)
+    if ( process.argv[2] == undefined || process.argv[2] == 'help' ){
+        help(process.argv,addGenCli.defaultOptions)
         process.exit()
     }
 
@@ -32,7 +32,7 @@ const coinNetworkList = require('coinnetworklist')
  * Prints general or command specific help to console.
  * @param {array} args process.args array
  */
-async function printHelp(args,defaultOptions){
+async function help(args,defaultOptions){
 
     let command = ""
 
