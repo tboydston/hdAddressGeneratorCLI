@@ -16,6 +16,31 @@ const coinNetworkList = require('coinnetworklist')
         process.exit()
     }
 
+    if ( process.argv[2] == "generateMnemonic" ){
+        
+        let result = {}
+
+        try{
+            result = await addGenCli.generateMnemonic()
+        } catch(e){
+            console.log(e)
+            process.exit()
+        }
+
+        console.log(`Mnemonic: ${result.mnemonic}`)
+        console.log(`Seed: ${result.seed.toString('hex')}`)
+        process.exit()
+
+    }
+
+    if ( process.argv[2] == "supportedWordlists" ){
+        let result = await AddressGeneratorCli.getWordlists()
+        console.log(`Supported BIP 39 wordlists: ${result.join(", ")}`)
+        process.exit()
+    }
+
+
+
     try{
         results = await addGenCli.generate()
     } catch(e){
@@ -47,6 +72,8 @@ async function help(args,defaultOptions){
         console.log()
         console.log("   help   Print this help menu.")
         console.log("   help [command]  Print help for specific command.")
+        console.log("   generateMnemonic Generate a BIP 39 mnemonic and seed.")
+        console.log("   supportedWordlists Returns a list of supported BIP 39 mnemonic wordlists/languages.")
         console.log("   supportedCoins  Print list of all supported coins.")
         console.log("   withSeed   Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using seed.")
         console.log("   withMnemonic   Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using mnemonic and optional pass phrase.")
@@ -74,11 +101,29 @@ async function help(args,defaultOptions){
         console.log("   --hideRootKeys Do not show the root keys used to generate the addresses.") 
         console.log("   --hidePrivateKeys Hide all private keys.") 
         console.log("   --file Load mnemonic or seed from file.") 
-        console.log("   --convertAddress -ca For certain coins ( currently only BCH ). You may need to convert legacy addresses into different formats. Options: cashAddress,bitpayAddress,bchSlp") 
+        console.log("   --convertAddress -ca For certain coins ( currently only BCH ). You may need to convert legacy addresses into different formats. Options: cashAddress,bitpayAddress,bchSlp")
+        console.log("   --strength -st Strength of mnemonic key. Controls how many words the mnemonic is. Default: 128 Options: Must be divisible by 32. Examples: 128=12 words, 256=24 words") 
+        console.log("   --wordlist -wl Wordlist/language you would like the BIP 39 mnemonic to be generated it. Default: english")        
         console.log()
 
     } else { 
         command = args[3] 
+    }
+
+    if ( command == "generateMnemonic"){
+        console.log()
+        console.log("generateMnemonic Generate BIP 39 Mnemonic and Seed.")
+        console.log("Required Options: None, defaults to english work list and 128 bit strength( 12 words. ).")
+        console.log("Supported Options: wordlist, strength( must be divisible by 32. 128=12 words, 256=24 words.")
+        console.log()
+        printDefaultOptions(defaultOptions)
+    }
+
+    if ( command == "supportedWordlists"){
+        console.log()
+        console.log("supportedWordlists Returns a list of supported BIP 39 mnemonic wordlists/languages.")
+        console.log()
+        printDefaultOptions(defaultOptions)
     }
 
     if ( command == "withSeed" ){

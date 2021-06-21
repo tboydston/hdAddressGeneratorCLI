@@ -36,6 +36,8 @@ node cli.js withMnemonic --coin=BTC -m='brand improve symbol strike say focus gi
 
 help   Print this help menu.  
 help [command]  Print help for specific command.  
+generateMnemonic Generate BIP 39 Mnemonic and Seed.
+supportedWordlists Returns a list of supported BIP 39 mnemonic wordlists/languages.
 supportedCoins  Print list of all supported coins.  
 withSeed   Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using seed.  
 withMnemonic   Generate BIP 44(legacy),49(segwit compatible), or 84(bech32) address using mnemonic and optional pass phrase.  
@@ -65,10 +67,21 @@ withMnemonicBIP141   Generate BIP 141 addresses with custom path, mnemonic, and 
 --hideRootKeys Do not show the root keys used to generate the addresses.  
 --hidePrivateKeys Hide all private keys.  
 --file Load mnemonic or seed from file.  
---convertAddress -ca Convert legacy addresses into different formats. Options: cashAddress,bitpayAddress,bchSlp. 
+--convertAddress -ca Convert legacy addresses into different formats. Options: cashAddress,bitpayAddress,bchSlp.
+--strength -st Strength of mnemonic key. Controls how many words the mnemonic is. Default: 128 Options: Must be divisible by 32. Examples: 128=12 words, 256=24 words
+--wordlist -wl Wordlist/language you would like the BIP 39 mnemonic to be generated it. Default: english
+
 
 
 ## Command Specific 
+
+### generateMnemonic
+
+Generate random BIP 39 mnemonic and seed. 
+
+**Supported Options:** wordlist, strength 
+
+**Defaults:** wordlist=english, strength=128, 
 
 ### withSeed
 

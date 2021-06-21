@@ -9,7 +9,7 @@ const colors = require('colors')
 
 class AddressGeneratorCli {
 
-    validRequests = ["help","supportedCoins","withSeed","withMnemonic","withMnemonicBIP32","withSeedBIP32","withMnemonicBIP141","withSeedBIP141"]
+    validRequests = ["help","generateMnemonic","supportedWordlists","supportedCoins","withSeed","withMnemonic","withMnemonicBIP32","withSeedBIP32","withMnemonicBIP141","withSeedBIP141"]
     shortOptionEquivalents = {
         "m":"mnemonic",
         "h":"hardened",
@@ -21,11 +21,14 @@ class AddressGeneratorCli {
         "algo":"hashAlgo",
         "s":"startIndex",
         "t":"total",
-        "ca":"convertAddress"
+        "ca":"convertAddress",
+        "wl":"wordlist",
+        "st":"strength"
     }
 
     requireOptions = {
         "help":[],
+        "generateMnemonic":["wordlist","strength"],
         "withSeed":["seed"],
         "withMnemonic":["mnemonic"],
         "withMnemonicBIP32":["mnemonic","customPath"],
@@ -50,7 +53,9 @@ class AddressGeneratorCli {
         hideRootKeys:false,
         hidePrivateKeys:false,
         file:false,
-        convertAddress:false
+        convertAddress:false,
+        strength:128,
+        wordlist:"english",
     }
 
     validOptions = {
@@ -86,6 +91,35 @@ class AddressGeneratorCli {
 
         return this.results
     
+    }
+
+    /**
+     * Generate a random BIP 39 Mnemonic and Seed
+     * @returns object
+     */
+    async generateMnemonic(){
+
+
+        try{
+
+            this.options = await this.processInput(this.args)
+            this.hdAdd = await this.processCommand(this.options)
+            this.results = await HdAddGen.generateMnemonic(this.options.wordlist,this.options.strength)
+
+        } catch (e) {
+            throw e
+        }
+
+        return this.results
+
+    }
+
+    /**
+     * Returns a list of supported wordlists for generating BIP 39 mnemonics. 
+     * @returns string
+     */
+    static async getWordlists(){
+        return HdAddGen.getSupportedWordLists()   
     }
     
     /**
