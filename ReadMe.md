@@ -1,6 +1,6 @@
 # Highly Deterministic Crypto Address Generator CLI
 
-Generate hierarchical deterministic(HD) coin specific crypto addresses from single master key pair for over 190 different cryptocurrencies through your terminal. 
+Generate hierarchical deterministic(HD) coin specific crypto addresses from single master key pair or extended public key for over 190 different cryptocurrencies through your terminal. 
 
 Ideal for cold wallet, air gapped address generation. 
 
@@ -12,6 +12,7 @@ Ideal for cold wallet, air gapped address generation.
 - Unique address building logic for ETH,EOS,XRP,XLM, and others. 
 - Custom BIP 39 Passphrases.
 - BIP 38 private key encryption.
+- Generate neutered ( addresses without private keys) from extended public keys.
 
 # Installation  
 
