@@ -81,11 +81,13 @@ async function help(args,defaultOptions){
         console.log("   withMnemonicBIP32   Generate BIP 32 legacy addresses with custom path, mnemonic, and optional pass phrase.")
         console.log("   withSeedBIP141   Generate BIP 141 addresses with custom path, seed, and hashing algo.")
         console.log("   withMnemonicBIP141   Generate BIP 141 addresses with custom path, mnemonic, and hashing algo.")
+        console.log("   withExtPub   Generate neutered addresses( no private key) from an account extended private key.")
         console.log()
         console.log("OPTIONS")
         console.log() 
         console.log("   --mnemonic -m  BIP39 mnemonic with spaces between words.")  
-        console.log("   --seed BIP39 seed used instead of a mnemonic.")  
+        console.log("   --seed BIP39 seed used instead of a mnemonic.") 
+        console.log("   --extPub Account extended public key used to generate addresses without private keys.")  
         console.log("   --hardened -h Should the resulting addresses be hardened?") 
         console.log("   --passPhrase -phrase Additional BIP39 passphrase custom passphrase to further secure mnemonic.") 
         console.log("   --coin Coin short name ( BTC, ETH, XRP, ect.).") 
@@ -157,7 +159,7 @@ async function help(args,defaultOptions){
         console.log()
         console.log("withMnemonicBIP32   Generate BIP 32 legacy addresses with custom path, mnemonic, and optional pass phrase.")
         console.log("Required Options: mnemonic, customPath")
-        console.log("Supported Options: mnemonic, passPhrase, coin, customPath, hardened, bip38Password)")
+        console.log("Supported Options: mnemonic, passPhrase, coin, customPath, hardened, bip38Password")
         console.log()
         printDefaultOptions(defaultOptions)
     }
@@ -166,7 +168,7 @@ async function help(args,defaultOptions){
         console.log()
         console.log("withSeedBIP141   Generate BIP 141 addresses with custom path, seed, and hashing algo.")
         console.log("Required Options: seed, customPath, hashAlgo")
-        console.log("Supported Options: seed, coin, customPath, hardened, hashAlgo, bip38Password)")
+        console.log("Supported Options: seed, coin, customPath, hardened, hashAlgo, bip38Password")
         console.log()
         printDefaultOptions(defaultOptions)
     }
@@ -175,7 +177,16 @@ async function help(args,defaultOptions){
         console.log()
         console.log("withMnemonicBIP141   Generate BIP 141 addresses with custom path, mnemonic, and hashing algo.")
         console.log("Required Options: mnemonic, customPath, hashAlgo")
-        console.log("Supported Options: mnemonic, coin, customPath, hardened, hashAlgo, bip38Password)")
+        console.log("Supported Options: mnemonic, coin, customPath, hardened, hashAlgo, bip38Password")
+        console.log()
+        printDefaultOptions(defaultOptions)
+    }
+
+    if ( command == "withExtPub" ){
+        console.log()
+        console.log("withExtPub   Generate neutered addresses( no private key) from an account extended private key.")
+        console.log("Required Options: extPub, coin ")
+        console.log("Supported Options: extPub, coin, account, change")
         console.log()
         printDefaultOptions(defaultOptions)
     }

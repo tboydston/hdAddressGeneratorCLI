@@ -9,7 +9,7 @@ const colors = require('colors')
 
 class AddressGeneratorCli {
 
-    validRequests = ["help","generateMnemonic","supportedWordlists","supportedCoins","withSeed","withMnemonic","withMnemonicBIP32","withSeedBIP32","withMnemonicBIP141","withSeedBIP141"]
+    validRequests = ["help","generateMnemonic","supportedWordlists","supportedCoins","withSeed","withMnemonic","withMnemonicBIP32","withSeedBIP32","withMnemonicBIP141","withSeedBIP141","withExtPub"]
     shortOptionEquivalents = {
         "m":"mnemonic",
         "h":"hardened",
@@ -34,7 +34,8 @@ class AddressGeneratorCli {
         "withMnemonicBIP32":["mnemonic","customPath"],
         "withSeedBIP32":["seed","customPath"],
         "withMnemonicBIP141":["mnemonic","customPath","hashAlgo"],
-        "withSeedBIP141":["seed","customPath","hashAlgo"]
+        "withSeedBIP141":["seed","customPath","hashAlgo"],
+        "withExtPub":["extPub","coin"]
     }
 
     defaultOptions = {
@@ -163,6 +164,7 @@ class AddressGeneratorCli {
             if ( options.command == "withMnemonicBIP32") hdAdd = HdAddGen.withMnemonicBIP32(options.mnemonic,options.passPhrase,options.coin,options.customPath,options.hardened,options.bip38Password)
             if ( options.command == "withSeedBIP141") hdAdd = HdAddGen.withSeedBIP141(options.seed,options.coin,options.customPath,options.hashAlgo,options.hardened,options.bip38Password)
             if ( options.command == "withMnemonicBIP141") hdAdd = HdAddGen.withMnemonicBIP141(options.mnemonic,options.passPhrase,options.coin,options.customPath,options.hashAlgo,options.hardened,options.bip38Password)
+            if ( options.command == "withExtPub") hdAdd = HdAddGen.withExtPub(options.extPub,options.coin,options.bip,options.account,options.change)
         } catch (e){
             throw e
         }

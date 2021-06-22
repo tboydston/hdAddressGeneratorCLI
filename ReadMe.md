@@ -46,6 +46,7 @@ withSeedBIP32 - Generate BIP 32 legacy addresses with custom path and seed.
 withMnemonicBIP32 - Generate BIP 32 legacy addresses with custom path, mnemonic, and optional pass phrase.  
 withSeedBIP141 - Generate BIP 141 addresses with custom path, seed, and hashing algo.  
 withMnemonicBIP141 - Generate BIP 141 addresses with custom path, mnemonic, and hashing algo.  
+withExtPub   Generate neutered addresses( no private keys ) from an account extended private key.
 
 
 ## Options
@@ -53,6 +54,7 @@ withMnemonicBIP141 - Generate BIP 141 addresses with custom path, mnemonic, and 
 
 --mnemonic -m  BIP39 mnemonic with spaces between words.  
 --seed BIP39 seed used instead of a mnemonic.  
+--extPub Account extended public key used to generate addresses without private keys.
 --hardened -h Should the resulting addresses be hardened?  
 --passPhrase -phrase Additional BIP39 passphrase custom passphrase to further secure mnemonic.  
 --coin Coin short name ( BTC, ETH, XRP, ect.).  
@@ -70,7 +72,8 @@ withMnemonicBIP141 - Generate BIP 141 addresses with custom path, mnemonic, and 
 --file Load mnemonic or seed from file.  
 --convertAddress -ca Convert legacy addresses into different formats. Options: cashAddress,bitpayAddress,bchSlp.  
 --strength -st Strength of mnemonic key. Controls how many words the mnemonic is. Default: 128 Options: Must be divisible by 32. Examples: 128=12 words, 256=24 words  
---wordlist -wl Wordlist/language you would like the BIP 39 mnemonic to be generated it. Default: english
+--wordlist -wl Wordlist/language you would like the BIP 39 mnemonic to be generated it. Default: english  
+
 
 
 
@@ -110,7 +113,7 @@ Generate BIP 32 legacy addresses with custom path and seed.
 
 **Required Options:** seed, customPath
 
-**Supported Options:** seed, coin, customPath, hardened, bip38Password)
+**Supported Options:** seed, coin, customPath, hardened, bip38Password
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false
 
@@ -120,7 +123,7 @@ Generate BIP 32 legacy addresses with custom path and seed.
 Generate BIP 32 legacy addresses with custom path, mnemonic, and optional pass phrase.
 **Required Options:** mnemonic, customPath
 
-**Supported Options:** mnemonic, passPhrase, coin, customPath, hardened, bip38Password)
+**Supported Options:** mnemonic, passPhrase, coin, customPath, hardened, bip38Password
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false
 
@@ -131,7 +134,7 @@ Generate BIP 141 addresses with custom path, seed, and hashing algo.
 
 **Required Options:** seed, customPath, hashAlgo
 
-**Supported Options:** seed, coin, customPath, hardened, hashAlgo, bip38Password)
+**Supported Options:** seed, coin, customPath, hardened, hashAlgo, bip38Password
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false
 
@@ -141,9 +144,17 @@ Generate BIP 141 addresses with custom path, mnemonic, and hashing algo.
 
 **Required Options:** mnemonic, customPath, hashAlgo
 
-**Supported Options:** mnemonic, coin, customPath, hardened, hashAlgo, bip38Password)
+**Supported Options:** mnemonic, coin, customPath, hardened, hashAlgo, bip38Password
 
 **Defaults:** passPhrase=false, hardened=false, coin=BTC, bip=44, account=0, change=0, bip38Password=false, customPath=false, hashAlgo=false, startIndex=0, total=10, format=json, hideRootKeys=false, hidePrivateKeys=false, file=false, 
+
+## withExtPub
+
+Generate neutered addresses( no private keys ) from an account extended private key.
+
+**Required Options:** extPub, coin
+
+**Supported Options:** extPub, coin, bip, account, change
 
 # Tests
 
