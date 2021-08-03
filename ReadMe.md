@@ -23,15 +23,15 @@ npm install
 
 # Usage 
 
-`
+```
 node cli.js [command] --option=key -o=key
-`
+```
 
 ## Example
 
-`
+```
 node cli.js withMnemonic --coin=BTC -m='brand improve symbol strike say focus ginger imitate ginger appear wheel brand swear relief zero'
-`
+```
 
 ## Commands
 
